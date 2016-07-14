@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Quandoo DS Test</string>
+    <string name="text_start_stop">Start/Stop</string>
+    <string name="text_random_pattern">Random Pattern</string>
+    <string name="text_pulsar_pattern">Pulsar Pattern</string>
+    <string name="text_switch_negative">Switch Negative</string>
+    <string name="text_clear_grid">Clear Grid</string>
+    <string name="text_tick">Tick: </string>
+
+</resources>
