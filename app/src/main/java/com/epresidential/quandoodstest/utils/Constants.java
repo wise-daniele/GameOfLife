@@ -6,7 +6,7 @@ package com.epresidential.quandoodstest.utils;
 public class Constants {
 
     //Interval between 2 ticks
-    public static final int SLEEP_INTERVAL = 1000; // 1 second
+    public static final int SLEEP_INTERVAL = 800; // 0.8 second
 
     //Patterns
     public final static int NO_PATTERN = 0;

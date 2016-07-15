@@ -20,7 +20,7 @@ public class GridItemAdapter extends BaseAdapter {
     private static final String LOG_TAG = GridItemAdapter.class.getSimpleName();
 
     private Context mContext;
-    private List<Boolean> mList;
+    private int mGridSize;
 
     private int[][] mCurrentGridState;
     private LayoutInflater mLayoutInflater;
@@ -28,15 +28,9 @@ public class GridItemAdapter extends BaseAdapter {
 
     public GridItemAdapter(Context context, GridView gridField, int[][] initialPattern) {
         mContext = context;
+        mGridSize = mContext.getResources().getInteger(R.integer.grid_size);
         mCurrentGridState = initialPattern;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        //mList = list;
-        /*
-        if (gridNumbers != null) {
-            gridNumbers.setVerticalSpacing(mContext.getResources().getDimensionPixelOffset(R.dimen.game_number_grid_horizontal_spacing));
-        }
-        */
     }
 
     @Override
@@ -46,8 +40,8 @@ public class GridItemAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        int column = i%10;
-        int row = i/10;
+        int column = i%mGridSize;
+        int row = i/mGridSize;
         return mCurrentGridState[row][column];
     }
 
@@ -58,8 +52,8 @@ public class GridItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int column = position%20;
-        int row = position/20;
+        int column = position%mGridSize;
+        int row = position/mGridSize;
 
         ViewHolder holder;
         if (convertView == null) {

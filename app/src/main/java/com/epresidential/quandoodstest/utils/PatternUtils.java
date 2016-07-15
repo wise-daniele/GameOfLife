@@ -1,6 +1,9 @@
 package com.epresidential.quandoodstest.utils;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.epresidential.quandoodstest.R;
 
 import java.util.Random;
 
@@ -11,30 +14,33 @@ public class PatternUtils {
 
     private static final String LOG_TAG = PatternUtils.class.getSimpleName();
 
-    public static int[][] randomPattern(){
+    public static int[][] randomPattern(Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
         Random rand = new Random();
-        int pattern[][] = new int[20][20];
-        for(int i = 0; i < 20; i++){
-            for(int j = 0; j < 20; j++){
+        int pattern[][] = new int[gridSize][gridSize];
+        for(int i = 0; i < gridSize; i++){
+            for(int j = 0; j < gridSize; j++){
                 pattern[i][j] = rand.nextInt(2);
             }
         }
         return pattern;
     }
 
-    public static int[][] noPattern(){
-        int pattern[][] = new int[20][20];
-        for(int i = 0; i < 20; i++){
-            for(int j = 0; j < 20; j++){
+    public static int[][] noPattern(Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        int pattern[][] = new int[gridSize][gridSize];
+        for(int i = 0; i < gridSize; i++){
+            for(int j = 0; j < gridSize; j++){
                 pattern[i][j] = 0;
             }
         }
         return pattern;
     }
 
-    public static boolean isPatternDead(int[][] currentStep){
-        for(int i = 0; i < 20; i++){
-            for(int j = 0; j < 20; j++){
+    public static boolean isPatternDead(int[][] currentStep, Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        for(int i = 0; i < gridSize; i++){
+            for(int j = 0; j < gridSize; j++){
                 if(currentStep[i][j] == 1)
                     return false;
             }
@@ -42,12 +48,13 @@ public class PatternUtils {
         return true;
     }
 
-    public static int[][] nextStep(int[][] currentStep){
-        int[][] nextStep = new int[20][20];
+    public static int[][] nextStep(int[][] currentStep, Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        int[][] nextStep = new int[gridSize][gridSize];
         boolean constantPattern = true;
-        for(int i = 0; i < 20; i++){
-            for(int j = 0; j < 20; j++){
-                int alive = getAlive(currentStep, i, j);
+        for(int i = 0; i < gridSize; i++){
+            for(int j = 0; j < gridSize; j++){
+                int alive = getAlive(currentStep, i, j, context);
                 if(alive == Constants.STATE_BORN) {
                     constantPattern = false;
                     nextStep[i][j] = 1;
@@ -70,9 +77,9 @@ public class PatternUtils {
         }
     }
 
-    public static int getAlive(int[][] currentStep, int row, int column){
+    public static int getAlive(int[][] currentStep, int row, int column, Context context){
         int count = 0;
-        int position = getGridPosition(row, column);
+        int position = getGridPosition(row, column, context);
         switch(position){
             case Constants.TOP_RIGHT:
                 count = currentStep[row][column - 1] + currentStep[row + 1][column] +
@@ -140,17 +147,18 @@ public class PatternUtils {
         }
     }
 
-    public static int getGridPosition(int row, int column){
+    public static int getGridPosition(int row, int column, Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
         if(row == 0 && column == 0){
             return Constants.TOP_LEFT;
         }
-        else if(row == 0 && column == 19){
+        else if(row == 0 && column == gridSize - 1){
             return Constants.TOP_RIGHT;
         }
-        else if(row == 19 && column == 0){
+        else if(row == gridSize - 1 && column == 0){
             return Constants.BOTTOM_LEFT;
         }
-        else if(row == 19 && column == 19){
+        else if(row == gridSize - 1 && column == gridSize - 1){
             return Constants.BOTTOM_RIGHT;
         }
         else if(row == 0){
@@ -159,10 +167,10 @@ public class PatternUtils {
         else if(column == 0){
             return Constants.LEFT;
         }
-        else if(row == 19){
+        else if(row == gridSize - 1){
             return Constants.BOTTOM;
         }
-        else if(column == 19){
+        else if(column == gridSize - 1){
             return Constants.RIGHT;
         }
         else{
@@ -170,8 +178,10 @@ public class PatternUtils {
         }
     }
 
-    public static int[][] pulsarPattern(){
-        int pattern[][] = new int[20][20];
+    //Does not work for grids with size less than 17x17
+    public static int[][] pulsarPattern(Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        int pattern[][] = new int[gridSize][gridSize];
         int i = 4;
         while(i<=16){
             if(i == 4 || i == 9 || i == 11 || i == 16 ){
@@ -193,25 +203,29 @@ public class PatternUtils {
         return pattern;
     }
 
-    public static int[][] blockConstantPattern(){
-        int pattern[][] = new int[20][20];
-        pattern[10][10] = 1;
-        pattern[10][11] = 1;
-        pattern[11][10] = 1;
-        pattern[11][11] = 1;
+    public static int[][] blockConstantPattern(Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        int pattern[][] = new int[gridSize][gridSize];
+        int half_size = gridSize/2;
+        pattern[half_size][half_size] = 1;
+        pattern[half_size][half_size + 1] = 1;
+        pattern[half_size + 1][half_size] = 1;
+        pattern[half_size + 1][half_size + 1] = 1;
         return pattern;
     }
 
-    public static int[][] beaconPattern(){
-        int pattern[][] = new int[20][20];
-        pattern[9][9] = 1;
-        pattern[9][10] = 1;
-        pattern[10][9] = 1;
-        pattern[10][10] = 1;
-        pattern[11][11] = 1;
-        pattern[11][12] = 1;
-        pattern[12][11] = 1;
-        pattern[12][12] = 1;
+    public static int[][] beaconPattern(Context context){
+        int gridSize = context.getResources().getInteger(R.integer.grid_size);
+        int pattern[][] = new int[gridSize][gridSize];
+        int half_size = gridSize/2;
+        pattern[half_size - 1][half_size - 1] = 1;
+        pattern[half_size - 1][half_size] = 1;
+        pattern[half_size][half_size - 1] = 1;
+        pattern[half_size][half_size] = 1;
+        pattern[half_size + 1][half_size + 1] = 1;
+        pattern[half_size + 1][half_size + 2] = 1;
+        pattern[half_size + 2][half_size + 1] = 1;
+        pattern[half_size + 2][half_size + 2] = 1;
         return pattern;
     }
 

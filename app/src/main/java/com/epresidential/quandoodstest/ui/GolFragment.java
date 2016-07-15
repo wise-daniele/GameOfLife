@@ -39,10 +39,13 @@ public class GolFragment extends Fragment implements GoLFragmentManager {
     private UpdateGridTask mUpdateGridTask;
     private boolean mIsPatternActive;
     private MenuItem switchMenuItem;
+    private int mGridSize;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGridSize = getActivity().getResources().getInteger(R.integer.grid_size);
+        mIsPatternActive = false;
         setHasOptionsMenu(true);
     }
 
@@ -55,7 +58,6 @@ public class GolFragment extends Fragment implements GoLFragmentManager {
         mTickStep = (TextView) view.findViewById(R.id.tick_step);
         mGridField = (GridView) view.findViewById(R.id.grid_field);
         mTickStep.setText("1");
-        mIsPatternActive = false;
         mCurrentPattern = changePattern(Constants.NO_PATTERN);
         mGridAdapter = new GridItemAdapter(getActivity(), mGridField, mCurrentPattern);
         mGridField.setAdapter(mGridAdapter);
@@ -103,8 +105,8 @@ public class GolFragment extends Fragment implements GoLFragmentManager {
         mGridField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                int column = position%20;
-                int row = position/20;
+                int column = position%mGridSize;
+                int row = position/mGridSize;
                 FrameLayout myCell = (FrameLayout) view;
                 int state = changeState(row, column);
                 if(state == 1) {
@@ -199,12 +201,12 @@ public class GolFragment extends Fragment implements GoLFragmentManager {
 
     @Override
     public int[][] generateNextStep(int[][] currentStep) {
-        return PatternUtils.nextStep(currentStep);
+        return PatternUtils.nextStep(currentStep, getActivity());
     }
 
     @Override
     public boolean isPatternDead(int[][] currentStep) {
-        return PatternUtils.isPatternDead(currentStep);
+        return PatternUtils.isPatternDead(currentStep, getActivity());
     }
 
     @Override
@@ -214,14 +216,14 @@ public class GolFragment extends Fragment implements GoLFragmentManager {
 
     @Override
     public int[][] changePattern(int pattern) {
-        int[][] newPattern = new int[20][20];
+        int[][] newPattern = new int[mGridSize][mGridSize];
         switch (pattern){
             case Constants.NO_PATTERN:
-                return PatternUtils.noPattern();
+                return PatternUtils.noPattern(getActivity());
             case Constants.RANDOM_PATTERN:
-                return PatternUtils.randomPattern();
+                return PatternUtils.randomPattern(getActivity());
             case Constants.PULSAR_PATTERN:
-                return PatternUtils.pulsarPattern();
+                return PatternUtils.pulsarPattern(getActivity());
         }
         return newPattern;
     }

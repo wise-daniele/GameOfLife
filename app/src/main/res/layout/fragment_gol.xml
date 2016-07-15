@@ -14,7 +14,8 @@
         android:layout_marginBottom="8dp"
         android:horizontalSpacing="1dp"
         android:verticalSpacing="1dp"
-        android:numColumns="20"
+        android:numColumns="@integer/grid_size"
+        android:scrollbars="none"
         android:stretchMode="columnWidth"/>
 
     <LinearLayout
